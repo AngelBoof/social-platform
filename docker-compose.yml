@@ -1,35 +1,35 @@
-version: "3.8"
 services:
   db:
     image: postgres:15
+    restart: always
     environment:
       POSTGRES_DB: social_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: yourpassword
-    ports:
-      - "5432:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
-    command: npm run dev
-    volumes:
-      - ./backend:/usr/src/app
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - POSTGRES_DB=social_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=yourpassword
+      - JWT_SECRET=some_long_random_string_here
+      - CORS_ORIGIN=http://localhost:5173
     depends_on:
       - db
 
   frontend:
-    build: ./frontend
-    command: npm run dev -- --host 0.0.0.0
-    volumes:
-      - ./frontend:/usr/src/app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "5173:5173"
+    environment:
+      - VITE_API_BASE=http://localhost:3000
     depends_on:
       - backend
-
-volumes:
-  db-data:
