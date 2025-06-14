@@ -2,7 +2,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from "./components/NavBar.jsx"; // <–– Check this path & casing
+// Use the actual component filename; Linux file systems are case-sensitive.
+import Navbar from "./components/Navbar.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 import Login from "./pages/Login.jsx";
